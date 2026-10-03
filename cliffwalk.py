@@ -88,6 +88,10 @@ def train_q_learning(env, num_episodes=10, alpha=0.1, gamma=0.99, epsilon=1.0, e
             Q[state, action] += alpha * (reward + gamma * Q[next_state, best_next_action] - Q[state, action])
             state = next_state
 
+        
+        if args.print_q:
+            print(Q)
+        
         # 每个 episode 结束后降低探索率
         epsilon = max(epsilon * epsilon_decay, epsilon_min)
         print(f"Episode {episode + 1}/{num_episodes} 完成.")
@@ -95,6 +99,10 @@ def train_q_learning(env, num_episodes=10, alpha=0.1, gamma=0.99, epsilon=1.0, e
     print("🎉 训练完成！")
     return Q
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--num_episodes", "-np", type=int, default=100, help="Number of training episodes")
+parser.add_argument("--print_q", "-pq", type=bool, default=False, help="Whether to print Q-table")
+args = parser.parse_args()
 
 # ----------------------------
 # 初始化环境和 pygame
@@ -130,9 +138,6 @@ epsilon_min = config["epsilon_min"]
 
 num_episodes = args.num_episodes  # 训练轮数
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--num_episodes", type=int, default=100, help="Number of training episodes")
-args = parser.parse_args()
 
 # ----------------------------
 # 训练 Q-Learning 并使用 pygame 可视化训练过程
